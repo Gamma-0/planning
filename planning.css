@@ -1,0 +1,137 @@
+html, body {
+	height: 100vh;
+	width: 100vw;
+	margin: 0;
+	font-family: arial;
+	font-size: 11pt;
+}
+
+@media print {
+	@page { margin: 0; }
+	html, body {
+		width: 297mm;
+		height: 209mm;
+		color-adjust: exact;
+	}
+	body {
+		padding: 10mm;
+		box-sizing: border-box;
+	}
+
+	#manage-planning {
+		display: none;
+	}
+	#settings {
+		visibility: hidden;
+	}
+}
+
+/******************
+ ***** ARRAYS *****
+ ******************/
+table {
+	border-collapse: collapse;
+}
+td {
+	border-left: 1px solid black;
+}
+th {
+	flex: 0 0 12.5%;
+	width: 12.5%;
+	position: relative;
+	/*width: 100%;*/
+	min-height: 1px;
+}
+th:first-child {
+	width: 0.1%;
+	padding: 0 12px;
+}
+tr:nth-child(2n+1) {
+	border-bottom: 1px solid #999;
+}
+
+th span {
+	display: block;
+}
+
+#planning {
+	width: 100%;
+}
+#planning td {
+	font-size: 10pt;
+}
+
+/******************
+ ***** MODALS *****
+ ******************/
+#bg-disabled {
+	display: none;
+	height: 100vh;
+	width: 100vw;
+	position: fixed;
+	background-color: rgba(0, 0, 0, 0.5);
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+}
+
+.modal {
+	display: none;
+	position: fixed;
+	max-height: 300px;
+	max-width: 280px;
+	background-color: rgb(255,255,255);
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	margin: auto;
+	padding: 15px;
+	box-sizing: border-box;
+}
+.no-border th, .no-border tr, .no-border td {
+	border: 0;
+}
+input {
+	box-sizing: border-box;
+}
+
+#libelle {
+	width: 100%;
+	min-width: 100%;
+	max-width: 100%;
+	max-height: 60px;
+}
+#beginHour, #endHour, #beginMinute, #endMinute,
+#hourBegin, #hourEnd {
+	width: 52px;
+}
+
+#settings {
+	font-size: 25px;
+}
+.float-left {
+	float: left;
+}
+.float-right {
+	float: right;
+}
+
+.close-btn {
+	border: 0;
+	background: 0;
+	padding: 0;
+}
+
+
+#checkDays {
+	display: flex;
+}
+
+.mb {
+	margin-bottom: 5px;
+}
+.bold {
+	font-weight: bold;
+}
