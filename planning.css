@@ -18,8 +18,8 @@ html, body {
 		box-sizing: border-box;
 	}
 
-	#manage-planning {
-		display: none;
+	#manage-planning, #bg-disabled {
+		display: none !important;
 	}
 	#settings {
 		visibility: hidden;
@@ -32,33 +32,57 @@ html, body {
 table {
 	border-collapse: collapse;
 }
-td {
+#planning td {
+	font-size: 10pt;
 	border-left: 1px solid black;
 }
-th {
+#planning th {
 	flex: 0 0 12.5%;
 	width: 12.5%;
 	position: relative;
 	/*width: 100%;*/
 	min-height: 1px;
 }
-th:first-child {
+#planning th:first-child {
 	width: 0.1%;
 	padding: 0 12px;
 }
-tr:nth-child(2n+1) {
+#planning tr:nth-child(2n+1) {
 	border-bottom: 1px solid #999;
 }
-
-th span {
+#planning th span {
 	display: block;
 }
+#planning td:hover {
+	cursor: pointer;
+	box-shadow: 0 0 0 999px inset rgba(0,0,0,0.2);
+}
 
-#planning {
+#planning, #manage-planning {
 	width: 100%;
 }
-#planning td {
-	font-size: 10pt;
+/******************
+ ***** TOPBAR *****
+ ******************/
+#manage-planning {
+	text-align: center;
+	color: #FFF;
+	background: #666;
+	border-bottom: 1px solid #999;
+}
+#previousDate:hover {
+	right: 1px;
+}
+ #nextDate:hover {
+	left: 1px;
+}
+#previousDate:hover, #nextDate:hover {
+	position: relative;
+	top: 1px;
+	text-shadow: 0 0 1px #000;
+}
+#previousDate, #nextDate {
+	cursor: pointer;
 }
 
 /******************
@@ -90,9 +114,7 @@ th span {
 	padding: 15px;
 	box-sizing: border-box;
 }
-.no-border th, .no-border tr, .no-border td {
-	border: 0;
-}
+
 input {
 	box-sizing: border-box;
 }
@@ -110,7 +132,27 @@ input {
 
 #settings {
 	font-size: 25px;
+	cursor: pointer;
 }
+#settings:hover { /* SEE HOW TO IMPROVE THAT*/
+	text-shadow: 0 0 5px #000, 0 0 10px #000;
+	color: #FFF;
+}
+/*
+#settings:hover {
+	animation: gear_rotate 2s infinite linear
+}
+
+@keyframes gear_rotate {
+	0%{
+		transform:rotate(0deg);
+	}
+	100% {
+		transform:rotate(360deg);
+	}
+}
+*/
+
 .float-left {
 	float: left;
 }
@@ -122,8 +164,12 @@ input {
 	border: 0;
 	background: 0;
 	padding: 0;
+	color: #FF5A79;
 }
-
+.close-btn:hover {
+	cursor: pointer;
+	text-shadow: 0 0 1px #FF5A79;
+}
 
 #checkDays {
 	display: flex;
