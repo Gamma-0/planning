@@ -206,11 +206,58 @@
 		);
 	};
 
+	function pad(number) {
+		return ((number < 10) ? '0' + number : number);
+	}
+
 	function getMondayDate () { // Recupere la date du lundi de la semaine courante
 		let today = new Date();
 		today.setDate(today.getDate()-today.getDay()+1);
 		return dateToString(today);
 	};
+
+	/**************************
+	 ***** ICAL FUNCTIONS *****
+	 **************************/
+	Date.prototype.toICalString = function() {
+		return this.getUTCFullYear() +
+			pad(this.getUTCMonth() + 1) +
+			pad(this.getUTCDate()) + 'T' +
+			pad(this.getUTCHours()) +
+			pad(this.getUTCMinutes()) +
+			pad(this.getUTCSeconds()) + 'Z';
+	};
+
+	function iCalExportEvent(dtstart, dtend, summary) { // Exporte au format iCal un evenement
+		let iCalEv = ("BEGIN:VEVENT\n");
+		iCalEv += ("DTSTART:"+dtstart+"\n");
+		iCalEv += ("DTEND:"+dtend+"\n");
+		if (summary !== "") iCalEv += ("SUMMARY:"+summary+"\n");
+		iCalEv += ("END:VEVENT\n");
+		return iCalEv;
+	}
+
+	function iCalExport() { // Exporte au format iCal le calendrier de la semaine courante
+		if (Object.keys(eventList).length > 0) {
+			let iCal = ("BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Gamma-0//Planning v1.0//FR\n");
+			//let uid = 0;
+			Object.keys(eventList).forEach(function(id){
+				//uid++;
+				//iCal += ("UID:"+uid+"\n");
+				let dateBegin = new Date(displayedMondayDate);
+				dateBegin.setDate(dateBegin.getDate()+ parseInt(id[1]));
+				let dateEnd = new Date(dateBegin);
+				let bH = parseInt(id.split('m')[1]);
+				dateBegin.setMinutes(dateBegin.getMinutes()+bH);
+				let eH = eventList[id][eventListAttr.endHour];
+				dateEnd.setMinutes(dateEnd.getMinutes()+eH);
+				let libelle = eventList[id][eventListAttr.libelle];
+				iCal += iCalExportEvent(dateBegin.toICalString(), dateEnd.toICalString(), libelle);
+			});
+			iCal += ("END:VCALENDAR");
+			console.log(iCal);
+		}
+	}
 
 	/*************************
 	 ***** MODAL DISPLAY *****
@@ -230,15 +277,13 @@
 	function minutesToHours(minutes) { // ex: 660 to 11:00
 		minutes = parseInt(minutes);
 		let hour = parseInt(minutes / 60);
-		let minute = minutes - (hour * 60);
-		if (minute < 10)
-			minute = "0"+minute;
+		let minute = pad(minutes - (hour * 60));
 		return hour + ":" + minute;
 	}
 
 	function dateToString(date) {
-		let month = (date.getMonth() < 9 ? '0' : '') + (date.getMonth()+1);
-		let day = (date.getDate() < 10 ? '0' : '') + (date.getDate());
+		let month = pad(date.getMonth()+1);
+		let day = pad(date.getDate());
 		return date.getFullYear()+'-'+month+'-'+day;
 	}
 
@@ -313,7 +358,7 @@
 				ev.removeAttribute("busy");
 			}
 			oldEvHour.rowSpan = 1;
-			removeAllChildren(oldEvHour) ;
+			removeAllChildren(oldEvHour);
 			if (removeFromList) {
 				removeEventFromList(oldEvHour.id);
 				checkSoonestAndLatestEvent();
@@ -407,7 +452,7 @@
 			colorPicker.value = rgb2hex(e.target.style.backgroundColor);
 			selectedEventNum = e.target.getAttribute("busy");
 		} else {
-			colorPicker.value = "#FFF";
+			colorPicker.value = "#FF0";
 			selectedEventNum = 0;
 		}
 		colorPicker.style.backgroundColor = colorPicker.value;
@@ -580,8 +625,8 @@
 					document.getElementById("hourBegin").value = hourBegin;
 					document.getElementById("hourEnd").value = hourEnd;
 					//document.getElementById("step").value = step;
-					soonest=23;
-					latest=1
+					soonest = 23;
+					latest = 1;
 				}
 			}
 		} else {
@@ -598,7 +643,9 @@
 			else
 				delete itemToModify[strDisplayedMondayDate];
 		} else {
-			itemToModify = {[strDisplayedMondayDate]: value};
+			itemToModify = {};
+			if (Object.keys(value).length !== 0)
+				itemToModify[strDisplayedMondayDate] = value;
 		}
 		if (Object.keys(itemToModify).length !== 0)
 			localStorage.setItem(item, JSON.stringify(itemToModify));
@@ -711,7 +758,7 @@
 			let span = document.getElementById("date-d"+j);
 			if (span.hasChildNodes())
 				removeAllChildren(span);
-			let strDate=(date.getDate())+"/"+((date.getMonth()+1) < 10 ? "0" : "") + (date.getMonth()+1);
+			let strDate=(date.getDate())+"/"+(pad(date.getMonth()+1));
 			span.appendChild(document.createTextNode(strDate));
 			date.setDate(date.getDate()+1);
 		}
